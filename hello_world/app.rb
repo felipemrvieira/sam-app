@@ -1,38 +1,28 @@
-# require 'httparty'
 require 'json'
 
 def lambda_handler(event:, context:)
-  # Sample pure Lambda function
+  # Verifica se o evento contém 'Records' e se 'eventName' está presente
+  if event.dig('Records', 0, 'eventName')&.start_with?('ObjectCreated:')
+    # Extrai informações do evento
+    bucket_name = event.dig('Records', 0, 's3', 'bucket', 'name')
+    object_key = event.dig('Records', 0, 's3', 'object', 'key')
 
-  # Parameters
-  # ----------
-  # event: Hash, required
-  #     API Gateway Lambda Proxy Input Format
-  #     Event doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-input-format
-
-  # context: object, required
-  #     Lambda Context runtime methods and attributes
-  #     Context doc: https://docs.aws.amazon.com/lambda/latest/dg/ruby-context.html
-
-  # Returns
-  # ------
-  # API Gateway Lambda Proxy Output Format: dict
-  #     'statusCode' and 'body' are required
-  #     # api-gateway-simple-proxy-for-lambda-output-format
-  #     Return doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html
-
-  # begin
-  #   response = HTTParty.get('http://checkip.amazonaws.com/')
-  # rescue HTTParty::Error => error
-  #   puts error.inspect
-  #   raise error
-  # end
-
-  {
-    statusCode: 200,
-    body: {
-      message: "Hello World!",
-      # location: response.body
-    }.to_json
-  }
+    # Lógica específica para eventos S3 'put'
+    return {
+      statusCode: 200,
+      body: {
+        message: "S3 Put Event Detected!",
+        bucket: bucket_name,
+        key: object_key
+      }.to_json
+    }
+  else
+    # Lógica padrão para outros tipos de evento ou se o evento não contiver 'Records'
+    return {
+      statusCode: 200,
+      body: {
+        message: "Hello World or Event Not Recognized"
+      }.to_json
+    }
+  end
 end
