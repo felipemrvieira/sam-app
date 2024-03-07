@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+    localstack:
+        image: localstack/localstack
+        ports:
+            - "4566:4566"
+        environment:
+            - SERVICES=lambda,s3
+        networks:
+            - localstack-net
+
+networks:
+    localstack-net:
+        name: localstack-net

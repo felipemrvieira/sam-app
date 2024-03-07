@@ -9,7 +9,4 @@ gem 'money'
 gem 'json'
 gem 'mysql2-lambda'
 
-group :test do
-  gem "test-unit"
-  gem "mocha"
-end
+ruby '~> 3.2.0'
