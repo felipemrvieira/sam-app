@@ -5,7 +5,7 @@ services:
         ports:
             - "4566:4566"
         environment:
-            - SERVICES=lambda,s3
+            - SERVICES=lambda,s3,secretsmanager
         networks:
             - localstack-net
 
