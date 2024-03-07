@@ -4,6 +4,8 @@
 
 localstack_data/
 .localstack
+localstack-env/
+
 ### Linux ###
 *~
 
