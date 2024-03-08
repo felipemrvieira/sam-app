@@ -18,7 +18,7 @@ Resources:
     HelloWorldFunction:
         Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
         Properties:
-            CodeUri: buckets_lambda/
+            CodeUri: lambdas/buckets_lambda/
             Handler: list_buckets.lambda_handler
             Runtime: ruby3.2
             Architectures:
@@ -32,11 +32,28 @@ Resources:
     GetSecretsFunction:
         Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
         Properties:
-            CodeUri: secrets_lambda/
+            CodeUri: lambdas/secrets_lambda/
             Handler: get_secrets.lambda_handler
             Runtime: ruby3.2
             Architectures:
                 - x86_64
+            Events:
+                GetSecrets:
+                    Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+                    Properties:
+                        Path: /hello
+                        Method: get
+    DatabaseFunction:
+        Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+        Properties:
+            CodeUri: lambdas/mysql_lambda/
+            Handler: touch_database.lambda_handler
+            Runtime: ruby3.2
+            Architectures:
+                - x86_64
+            Environment:
+                Variables:
+                    LD_LIBRARY_PATH: "/var/task/lib:/var/lang/lib:$LD_LIBRARY_PATH"
             Events:
                 GetSecrets:
                     Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
